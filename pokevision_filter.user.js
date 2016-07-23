@@ -88,7 +88,7 @@ function updateCss() {
   overflow: hidden;
   z-index: 9999999999999;
 }
-#togglecontainer:hover {
+#togglecontainer:hover, #togglecontainer:focus {
   width: 240px;
   height: 480px;
   overflow: auto;
