@@ -9,20 +9,6 @@
 // @version             1.0.1
 // ==/UserScript==
 
-
-// This part removes the cooldown disable so you can refresh more often, please do not abuse this!
-var btn = $('button.home-map-scan.btn').click(function () {
-    cleanBtn();
-});
-
-function cleanBtn() {
-    if ( !btn.attr('disabled') ) {
-        window.setTimeout(cleanBtn, 500);
-        return;
-    }
-    btn.removeAttr('disabled');
-}
-
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
