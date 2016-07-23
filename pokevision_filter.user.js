@@ -56,7 +56,7 @@ function replacer(pid, display) {
   var border = '';
   if (!display) {
     display = 'none';
-    border = 'border: 1px dashed black; ';
+    border = 'border: 1px solid grey; border-radius: 20px;';
   }
   else {
     display = 'block';
