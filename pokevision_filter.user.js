@@ -6,7 +6,7 @@
 // 
 // @run-at              document-ready
 // @include-jquery      true
-// @version             1.0.0
+// @version             1.0.1
 // ==/UserScript==
 
 
@@ -32,12 +32,11 @@ $('<style id="style_helper" type="text/css">').appendTo(document.head);
 $('<div id="togglecontainer">').appendTo(document.body);
 
 var pokemon = [];
-var pre_hidden = [
-  10, 11, 13, 14, 16, 19, 20, 21, 41];
+var pre_hidden = [10, 11, 13, 14, 16, 19, 20, 21, 41];
 
 for (var i = 1; i <= 150; i += 1) {
   $(
-    '<img data-id="' + i + '" title="Pokemon: ' + i + '" src="//ugc.pokevision.com/images/pokemon/' + i + '.png">'
+    '<img data-id="' + i + '" id="pokemon_' + i + '" title="Pokemon: ' + i + '" src="//ugc.pokevision.com/images/pokemon/' + i + '.png">'
   ).appendTo('#togglecontainer')
   .click(function () {
     var pid = $(this).attr('data-id');
@@ -53,18 +52,16 @@ for (var i = 1; i <= 150; i += 1) {
 
 
 function replacer(pid, display) {
-  var border = '';
-  if (!display) {
-    display = 'none';
-    border = 'border: 1px solid grey; border-radius: 20px;';
+  if (display) {
+    return '';
   }
-  else {
-    display = 'block';
-  }
-  return `.home-map img[src$='pokemon/{{id}}.png'] ~ *, .home-map img[src$='pokemon/{{id}}.png'] {
+  display = 'none';
+  var border = 'border: 1px solid grey; border-radius: 20px;';
+  return `.home-map img.leaflet-marker-icon[src$='pokemon/{{id}}.png'] ~ *,
+.home-map img.leaflet-marker-icon[src$='pokemon/{{id}}.png'] {
   display: {{display}};
 }
-#togglecontainer img[src$='pokemon/{{id}}.png'] {
+#togglecontainer img#pokemon_{{id}} {
 {{border}}
 }`
     .replace(new RegExp('{{id}}', 'g'), pid)
@@ -73,12 +70,7 @@ function replacer(pid, display) {
 }
 
 function updateCss() {
-  var css = '';
-  pokemon.forEach(function (obj) {
-    css += replacer(obj.pid, obj.active);
-  });
-  $('#style_helper').empty().append(
-    `
+  var css = `
 #togglecontainer {
   position: absolute;
   top: 0; left: 0;
@@ -97,7 +89,11 @@ function updateCss() {
 }
 #togglecontainer img {
   float: left; width: 40px; height: 40px;
-}` +
+}`;
+  pokemon.forEach(function (obj) {
+    css += replacer(obj.pid, obj.active);
+  });
+  $('#style_helper').empty().append(
     css
   );
 }
