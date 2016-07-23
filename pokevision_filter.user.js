@@ -23,6 +23,27 @@ function cleanBtn() {
     btn.removeAttr('disabled');
 }
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
 
 // On to the part that allows you to filter stuff:
 $('#style_helper').remove();
@@ -31,7 +52,16 @@ $('#togglecontainer').remove();
 $('<style id="style_helper" type="text/css">').appendTo(document.head);
 $('<div id="togglecontainer">').appendTo(document.body);
 
+// Load Pokemon from Cookies if possible.
+var preloaded_pokemon = getCookie('pokevision_stored_filters');
 var pokemon = [];
+if (preloaded_pokemon) {
+  pokemon = JSON.parse(preloaded_pokemon);
+  preloaded_pokemon = true;
+} else {
+  preloaded_pokemon = false;
+}
+
 var pre_hidden = [10, 11, 13, 14, 16, 19, 20, 21, 41];
 
 for (var i = 1; i <= 150; i += 1) {
@@ -42,12 +72,15 @@ for (var i = 1; i <= 150; i += 1) {
     var pid = $(this).attr('data-id');
     pokemon[pid-1].active = !pokemon[pid-1].active;
     updateCss();
+    setCookie('pokevision_stored_filters', JSON.stringify(pokemon), 365);
   });
   var state = true;
   if (pre_hidden.indexOf(i) > -1) {
     state = false;
   }
-  pokemon.push({pid: i, active: state});
+  if (!preloaded_pokemon) {
+    pokemon.push({pid: i, active: state});
+  }
 }
 
 
