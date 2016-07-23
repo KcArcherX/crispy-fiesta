@@ -87,6 +87,8 @@ function updateCss() {
   background: white;
   overflow: hidden;
   z-index: 9999999999999;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 #togglecontainer:hover, #togglecontainer:focus {
   width: 240px;
